@@ -9,7 +9,7 @@
   <br>
   <div>
     <a href="https://everlasting-chicken-ada.notion.site/HOME-3c279bd41574456098349527fa339db2"><img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Notion"></a>
-     <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=TypeScript&logoColor=white"/>
+     <img src="https://img.shields.io/badge/Notion-3178C6?style=flat&logo=TypeScript&logoColor=white"/>
   </div>
   
   
