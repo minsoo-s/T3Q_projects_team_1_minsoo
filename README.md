@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<p><a align="center" href="https://everlasting-chicken-ada.notion.site/HOME-3c279bd41574456098349527fa339db2" target="_blank"> <img src="https://user-images.githubusercontent.com/108515200/201014715-95dc2034-8bff-4a5e-835f-65e5d8ef840b.png" width="850"/></a></p>
+<p><a align="center" href="https://everlasting-chicken-ada.notion.site/HOME-3c279bd41574456098349527fa339db2" target="_blank"> <img src="https://user-images.githubusercontent.com/108515200/201014715-95dc2034-8bff-4a5e-835f-65e5d8ef840b.png" width="350"/></a></p>
 
 한국어 \| [English](.github/README_eng.md)
 
@@ -18,7 +18,7 @@
     <a href="https://datainstitute.knu.ac.kr/"> (2기)</a>
     의 <strong>T3Q_1팀</strong> <strong>임재원</strong>, <strong>신민수</strong>, <strong>박병준</strong>, <strong>김지윤</strong>입니다.
     <br><br>
-    To request a commercial license please complete the form at <a href="https://ultralytics.com/license">Ultralytics Licensing</a>.
+    
     <br><br>
   </p>
   
@@ -32,7 +32,7 @@
 <details open>
 <summary>Install</summary>
 
-Clone repo and install [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) in a
-[**Python>=3.7.0**](https://www.python.org/) environment, including
-[**PyTorch>=1.7**](https://pytorch.org/get-started/locally/).  
+저희 프로젝트는 yolo v5 [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt)와 동일하나
+<br>기존과 달리 [Python>=3.8.0](https://www.python.org/)환경을 요구합니다!
+<br>[**개발환경 정의서 보러가기**](https://github.com/knudatascientists/T3Q_projects_team_1/issues/2)
   
