@@ -1,4 +1,4 @@
-# <div align="center">T3Q_projects_team_1</div>
+![header](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=150&section=header&fontAlign=50&fontAlignY=30&text=T3Q_projects_team_1&fontSize=50) 
 
 <div align="center">
 
@@ -14,20 +14,18 @@
   
   <br>
   <p>
-    안녕하십니까🙇🏻 저희는 경북대학교 K-Digital Training 빅데이터 분석가 양성과정
+    안녕하십니까🙇🏻 <br> 저희는 경북대학교 K-Digital Training 빅데이터 분석가 양성과정
     <a href="https://datainstitute.knu.ac.kr/"> (2기)</a>
     의 <strong>T3Q_1팀</strong> <strong>임재원</strong>, <strong>신민수</strong>, <strong>박병준</strong>, <strong>김지윤</strong>입니다.
-    <br><br>
-    
-    <br><br>
   </p>
   
   
-  ## <div align="center">Project Goals</div>
+  ## <div align="center">Project Goal</div>
 
 이륜자동차 안전운전을 위한 실시간 위험요소 탐지 서비스
+<br>Gantt Chart [2022.10.26~2022.12.13]([https://github.com/knudatascientists/T3Q_projects_team_1/files/10049604/T3Q_1._.xlsx](https://github.com/knudatascientists/T3Q_projects_team_1/issues/3))
 
-## <div align="center">Configuration Settings</div>
+## <div align="center">Settings</div>
   
 <details open>
 <summary>Install</summary>
@@ -35,4 +33,7 @@
 저희 프로젝트는 yolo v5 [requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt)와 동일하나
 <br>기존과 달리 [Python>=3.8.0](https://www.python.org/)환경을 요구합니다!
 <br>[**개발환경 정의서 보러가기**](https://github.com/knudatascientists/T3Q_projects_team_1/issues/2)
+  
+## <div align="center">모델 학습 로그</div>
+  
   
