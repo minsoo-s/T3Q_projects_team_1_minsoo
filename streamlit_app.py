@@ -41,7 +41,7 @@ import pandas as pd
 import pydeck as pdk
 import streamlit as st
 
-# 위치정보 상세 (단, data에 위도 경도 컬럼이 있어야 함)
+# 위치정보 상세 (단, data에 위도, 경도 컬럼이 있어야 함)
 
 def location_detail(data_c):
     data = data_c.copy()
