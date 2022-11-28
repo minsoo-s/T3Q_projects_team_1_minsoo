@@ -4,3 +4,7 @@ streamlit
 tensorflow
 jupyter
 matplotlib
+folium
+geopy
+geopandas
+pydeck
