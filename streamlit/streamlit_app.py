@@ -3,16 +3,19 @@
 #----------------------------------------------------
 
 import streamlit as st 
+st.set_page_config(layout="wide")
 
 # title 쓰기
-st.title(' 실시간 위치정보 지도에 표시 ')
+st.title(' 대구광역시 유지보수 필요한 포트홀 위치정보 ')
 # 지역을 고르는 select box
 option = st.sidebar.selectbox(
     '어떤 지역을 고르시겠습니까?',
-    ('용현동', '구월동', '송도동', '주안동', "숭의동", "연수동", "부평동", "청라동", "동춘동", "학익동"))
+    ('대구 전체','북구', '중구', '서구', '동구',"남구", "수성구", "달서구", "달성군"))
+
+# if st.sidebar.selectbox('실행'):
 
 
-# 현재위치 좌표 얻기 --------------------------------------------------------------
+# [ 현재위치 좌표 수집 함수 ] --------------------------------------------------------------
 import requests, json
 import pandas as pd
 import numpy as np
@@ -30,19 +33,20 @@ def current_location():
     
     return gps
     
-# 맵에 위치 표시 ------------------------------------------------------------------------------------------
+
+
+# [ 맵에 위치 표시 함수] ------------------------------------------------------------------------------------------
 import numpy as np
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
 
 # 위치정보 상세 (단, data에 위도, 경도 컬럼이 있어야 함)
-
 def location_detail(data_c):
     data = data_c.copy()
 
     # 아이콘 이미지 불러오기
-    ICON_URL = "https://cdn-icons-png.flaticon.com/128/2268/2268142.png"
+    ICON_URL = "https://cdn-icons-png.flaticon.com/512/2711/2711648.png"
     icon_data = {
         # Icon from Wikimedia, used the Creative Commons Attribution-Share Alike 3.0
         # Unported, 2.5 Generic, 2.0 Generic and 1.0 Generic licenses
@@ -67,15 +71,31 @@ def location_detail(data_c):
             pickable=True,
         )
     ]
+    
+    if len(data_c) == 0:
+        pass
+    else:
+        # Deck 클래스 인스턴스 생성
+        deck = pdk.Deck(height=100,
+                        #width=1000,
+                        map_style=None, 
+                        initial_view_state=pdk.ViewState(longitude=lo, 
+                                                        latitude=la, 
+                                                        zoom=12, 
+                                                        pitch=50), 
+                        layers=layers,
+                        tooltip={"text":"{주소}\n{위도}/{경도}"})
 
-    # Deck 클래스 인스턴스 생성
-    deck = pdk.Deck(
-        map_style=None, initial_view_state=pdk.ViewState(longitude=lo, latitude=la, zoom=11, pitch=50), layers=layers
-    )
+        st.pydeck_chart(deck, use_container_width=True)
 
-    st.pydeck_chart(deck, use_container_width=True)
+# r = pdk.Deck(
+#     layers=[layer],
+#     initial_view_state=view_state,
+#     tooltip={"text": "{name}\n{address}"},
+#     map_style=pdk.map_styles.ROAD,
+# )
 
-# gps 데이터셋 갱신 및 누적 함수--------------------------------------------------
+# [ gps 데이터셋 갱신 및 누적 함수 ]--------------------------------------------------
 def add_gps_all(gps):
     # gps_all(기존) 불러오기
     gps_all = pd.read_csv('gps_all.csv')
@@ -90,14 +110,50 @@ def add_gps_all(gps):
     # 추가 위치정보 저장된 데이터프레임 저장
     gps_all.to_csv('gps_all.csv',index = False)
 
-# 최초 gps_all 데이터프레임 생성 ------------------------------- # 
-# data ={'위도':[35.8724,35.8725,35.8726,35.8727,35.8728],
-#         '경도': [128.5925,128.5926,128.5927,128.5928,128.5929]
-# }
-# gps_origin = pd.DataFrame(data ,columns=['위도','경도'] )
-# -------------------------------------------------------------- #
 
-# 함수 실행 코드 ------------------------------------------------------------------------
+
+# [위도,경도 -> 주소 변환 함수]-----------------------------------------------------
+from geopy.geocoders import Nominatim
+
+def geocoding_reverse(lat_lng_str): 
+    geolocoder = Nominatim(user_agent = 'South Korea', timeout=None)
+    address = geolocoder.reverse(lat_lng_str)
+
+    return address
+
+
+
+# [ 지역 구별 주소 데이터프레임 함수 ]----------------------------------------------------
+def createDF(gps_all):
+# 위도,경도 -> 주소 변환
+    address_list = []
+    for i in range(len(gps_all)):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        lat = gps_all['위도'][i]
+        lng = gps_all['경도'][i]
+        address = geocoding_reverse(f'{lat}, {lng}')
+        
+        # 카테고리 선택 
+        if option =='대구 전체':
+            address_list.append(address)
+        elif option in address[0]:
+            address_list.append(address)
+
+    df = pd.DataFrame(address_list, columns=['주소','위치정보(위도,경도)'])
+    
+    df_map = pd.DataFrame(columns=['주소','위도','경도'])
+    for i in range(len(df)):
+        df_map.loc[i] = [df.loc[i]['주소'],df.loc[i][1][0],df.loc[i][1][1]]
+
+    # 위도,경도 주소변환 데이터프레임 시각화
+    st.dataframe(df)
+
+    # 해당 지역 위치정보 개수 표기
+    st.write(option,'지역, 보수가 필요한 구역: ',len(df),'개')
+    
+    return df_map
+#---------------------------------------------------------------
+
+# [ 지도 함수 실행 코드 ]------------------------------------------------------------------------
 
 # 실시간 위치정보 수집
 gps = current_location()
@@ -108,62 +164,7 @@ add_gps_all(gps)
 # 최종 수정된 전체 위치정보 파일 불러오기
 gps_all = pd.read_csv('gps_all.csv')
 
+# 주소 데이터프레임 표시
+df_map = createDF(gps_all) 
 # 전체 위치정보 웹 지도에 표시
-location_detail(gps_all)
-
-# 해당 지역 위치정보 개수 표기
-st.write(option,'보수가 필요한 구역: ',len(gps_all),'개')
-
-
-# 데이터 프레임 시각화 -----------------------------------------------------------------
-# 위도,경도 -> 주소 변환 함수
-from geopy.geocoders import Nominatim
-
-def geocoding_reverse(lat_lng_str): 
-    geolocoder = Nominatim(user_agent = 'South Korea', timeout=None)
-    address = geolocoder.reverse(lat_lng_str)
-
-    return address
-
-# 주소로 변환하여 데이터프레임으로 생성
-address_list = []
-for i in range(len(gps_all)):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-    lat = gps_all['위도'][i]
-    lng = gps_all['경도'][i]
-    address = geocoding_reverse(f'{lat}, {lng}')
-    address_list.append(address)
-
-df = pd.DataFrame(address_list, columns=['주소','위치정보(위도,경도)'])
-
-# 위도,경도 주소변환 데이터프레임 시각화
-st.dataframe(df)
-#------------------------------------------------------------------------------------------
-
-import geopandas as gpd
-import pydeck as pdk
-
-Daegu_file = "../LSMD_ADM_SECT_UMD_대구/LSMD_ADM_SECT_UMD_27.shp"
-df = gpd.read_file(Daegu_file, encoding='euckr')
-df.tail()
-
-
-# Make layer
-layer = pdk.Layer(
-    'PolygonLayer', # 사용할 Layer 타입
-    df, # 시각화에 쓰일 데이터프레임
-    get_polygon='coordinates', # geometry 정보를 담고있는 컬럼 이름
-    get_fill_color='[0, 255*정규화인구, 0]', # 각 데이터 별 rgb 또는 rgba 값 (0~255)
-    pickable=True, # 지도와 interactive 한 동작 on
-    auto_highlight=True # 마우스 오버(hover) 시 박스 출력
-)
-
-# Set the viewport location
-center = [126.986, 37.565]
-view_state = pdk.ViewState(
-    longitude=center[0],
-    latitude=center[1],
-    zoom=10)
-
-# Render
-r = pdk.Deck(layers=[layer], initial_view_state=view_state)
-r.show()
+location_detail(df_map)
